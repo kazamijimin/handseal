@@ -1,0 +1,16 @@
+jutsu:
+  - signs: [dragon, ram]
+    name: Flame Burst
+    damage: 25
+  - signs: [snake, tiger]
+    name: Shadow Bind
+    damage: 20
+  - signs: [tiger, dragon]
+    name: Lightning Fang
+    damage: 30
+  - signs: [ram, snake]
+    name: Wind Cutter
+    damage: 15
+default:
+  name: Unknown Jutsu
+  damage: 0

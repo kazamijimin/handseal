@@ -1,0 +1,11 @@
+# Install a matching torch/torchvision pair for the coworker's CPU or CUDA
+# environment first. The unpinned pair below is intentionally compatible with
+# platform-specific PyTorch wheel selection.
+torch>=2.2,<3
+torchvision>=0.17,<1
+numpy>=1.26,<3
+Pillow>=10,<13
+PyYAML>=6,<7
+scikit-learn>=1.4,<2
+matplotlib>=3.8,<4
+opencv-python>=4.8,<5
