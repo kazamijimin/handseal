@@ -1,0 +1,2 @@
+# Optional dependency for the V key voice toggle in challenge mode.
+pyttsx3>=2.90,<3

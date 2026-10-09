@@ -12,9 +12,9 @@ The configured classes are:
 dragon, ram, snake, tiger, no_seal
 ```
 
-The package includes a local OpenCV two-player battle prototype. It does not
-include mobile/web deployment, networked matches, learned sequence recognition,
-or thesis materials.
+The package includes a local OpenCV single-sign webcam check and an optional
+two-player battle prototype. It does not include mobile/web deployment,
+networked matches, learned sequence recognition, or thesis materials.
 
 Feed, QR, and Organizer functionality are outside this project scope and must
 not be changed.
@@ -104,6 +104,30 @@ The default configuration is in `training/configs/default.yaml`. It uses a
 224x224 input, ImageNet normalization, class-weighted cross-entropy, validation
 macro-F1 model selection, and early stopping.
 
+For the normal coworker handoff, run the root-level PowerShell wrapper. It
+trains the model, evaluates the best checkpoint on the test split, and exports
+TorchScript plus metadata:
+
+```powershell
+.\training.ps1
+```
+
+The default wrapper run uses `small_cnn` and automatic device selection. For a
+CUDA training machine, use the transfer-learning model explicitly:
+
+```powershell
+.\training.ps1 -Model mobilenetv3_small -Device cuda -RunName mobilenetv3_v1
+```
+
+The wrapper also supports resuming from a checkpoint:
+
+```powershell
+.\training.ps1 -Resume artifacts\small_cnn_v1\last.pt -RunName small_cnn_v1_resume
+```
+
+It writes checkpoints under `artifacts/<run-name>/`, test reports under
+`reports/`, and the exported model plus metadata under `artifacts/exports/`.
+
 Train the baseline:
 
 ```powershell
@@ -158,7 +182,60 @@ mapping, input size, normalization, model name, and source checkpoint. The
 battle application loads this artifact rather than importing training loops or
 training-only modules.
 
-## Two-player webcam battle
+## Single-sign webcam check
+
+For now, use the single-sign check to verify the actual hand-sign model without
+any fighting, health, or jutsu logic.
+
+You can verify the camera and crop without a model:
+
+```powershell
+python -m app.run_hand_sign --mode preview
+```
+
+This displays the webcam and the centered crop used by the dataset collector,
+but it intentionally does not claim a hand-sign prediction.
+
+After your coworker exports a TorchScript model and metadata, run real
+single-sign recognition:
+
+```powershell
+python -m app.run_hand_sign --mode model --metadata artifacts/exports/<run>.metadata.json
+```
+
+The window displays human-readable words such as `Detected hand sign: Dragon`,
+the best-guess label, and confidence. Weak predictions display `Uncertain hand
+sign`; `no_seal` displays `No hand sign detected`. Use
+`--confidence-threshold 0.80` to change the acceptance threshold. Press `Q` or
+`Esc` to close it. This is the recommended current milestone.
+
+## Target-sign challenge
+
+After model mode is working, start the non-combat playable challenge:
+
+```powershell
+python -m app.run_hand_sign --mode challenge --metadata artifacts/exports/<run>.metadata.json
+```
+
+The challenge randomly requests Dragon, Ram, Snake, or Tiger for ten rounds.
+The user must hold the matching sign with at least 80% confidence for 0.75
+seconds. A neutral `no_seal` or low-confidence transition is required before
+the next attempt. Correct signs score 100 points; wrong signs do not advance
+the round; each round times out after ten seconds.
+
+The screen shows the target word, detected word, confidence, stable progress,
+round, score, streak, and final accuracy/response-time summary. Use `R` to
+restart, `V` to toggle optional voice, and `Q` or `Esc` to quit. Voice is off by
+default and can be installed separately:
+
+```powershell
+python -m pip install -r requirements-voice.txt
+```
+
+The challenge requires an exported trained model and never uses an untrained
+model as recognition evidence.
+
+## Later: two-player webcam battle
 
 Install the dependencies first, then run the model-free demo:
 

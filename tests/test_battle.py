@@ -12,8 +12,9 @@ import torch
 
 from app.artifact_inference import TorchScriptSignPredictor
 from app.battle.state import BattleState, Jutsu, JutsuCatalog, SequenceTracker
-from app.camera import open_camera, split_player_zones
+from app.camera import center_crop, center_square_bounds, open_camera, split_player_zones
 from app.demo_input import DemoInput
+from app.sign_labels import display_name, prediction_words
 
 
 JUTSU_PATH = Path(__file__).resolve().parents[1] / "app" / "battle" / "jutsu.yaml"
@@ -41,10 +42,28 @@ class BattleTests(unittest.TestCase):
         self.assertEqual(right.shape[0], 10)
         self.assertLess(left.shape[1] + right.shape[1], frame.shape[1])
 
+    def test_center_crop_matches_collector_shape(self):
+        frame = np.zeros((480, 640, 3), dtype=np.uint8)
+        x1, y1, x2, y2 = center_square_bounds(frame.shape, 0.60)
+        crop = center_crop(frame, 0.60)
+        self.assertEqual(crop.shape, (y2 - y1, x2 - x1, 3))
+        self.assertEqual(crop.shape[0], crop.shape[1])
+
     def test_camera_dependency_error_is_clear(self):
         with patch.dict(sys.modules, {"cv2": None}):
             with self.assertRaisesRegex(RuntimeError, "OpenCV is required"):
                 open_camera(0)
+
+    def test_prediction_words_are_human_readable(self):
+        self.assertEqual(display_name("dragon"), "Dragon")
+        headline, detail = prediction_words("dragon", 0.95)
+        self.assertEqual(headline, "Detected hand sign: Dragon")
+        self.assertIn("confidence 95.0%", detail)
+
+        headline, _ = prediction_words("snake", 0.50)
+        self.assertEqual(headline, "Uncertain hand sign")
+        headline, _ = prediction_words("no_seal", 0.99)
+        self.assertEqual(headline, "No hand sign detected")
 
     def test_confidence_rejection(self):
         tracker = SequenceTracker()
