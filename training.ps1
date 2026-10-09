@@ -15,6 +15,9 @@
 
 .EXAMPLE
     .\training.ps1 -Resume artifacts\small_cnn_v1\last.pt -RunName small_cnn_v1_resume
+
+.EXAMPLE
+    .\training.ps1 -DatasetRoot handseal_dataset_v2 -Model mobilenetv3_small -Device cuda
 #>
 
 [CmdletBinding()]
@@ -26,6 +29,8 @@ param(
     [string]$Device = "auto",
 
     [string]$Config = "training/configs/default.yaml",
+
+    [string]$DatasetRoot = "handseal_dataset",
 
     [string]$RunName = "",
 
@@ -60,8 +65,8 @@ try {
     if (-not (Test-Path -LiteralPath $Config -PathType Leaf)) {
         throw "Training config not found: $Config"
     }
-    if (-not (Test-Path -LiteralPath "handseal_dataset" -PathType Container)) {
-        throw "Dataset directory not found: handseal_dataset"
+    if (-not (Test-Path -LiteralPath $DatasetRoot -PathType Container)) {
+        throw "Dataset directory not found: $DatasetRoot"
     }
 
     if ($PythonExe) {
@@ -89,6 +94,13 @@ try {
         )
     }
 
+    Invoke-PythonStep -Label "Auditing the dataset before training" -Arguments @(
+        "-m", "data_tools.audit_dataset",
+        "--dataset-root", $DatasetRoot,
+        "--output", "reports/dataset_audit.json",
+        "--strict"
+    )
+
     if (-not $RunName) {
         $RunName = "{0}_{1}" -f $Model, (Get-Date -Format "yyyyMMdd_HHmmss")
     }
@@ -98,7 +110,8 @@ try {
         "--config", $Config,
         "--model", $Model,
         "--run-name", $RunName,
-        "--device", $Device
+        "--device", $Device,
+        "--dataset-root", $DatasetRoot
     )
     if ($Resume) {
         if (-not (Test-Path -LiteralPath $Resume -PathType Leaf)) {
@@ -113,6 +126,10 @@ try {
     $bestCheckpoint = Join-Path $runDirectory "best.pt"
     if (-not (Test-Path -LiteralPath $bestCheckpoint -PathType Leaf)) {
         throw "Training completed without creating the best checkpoint: $bestCheckpoint"
+    }
+    Copy-Item -LiteralPath "reports/dataset_audit.json" -Destination (Join-Path $runDirectory "dataset_audit.json") -Force
+    if (Test-Path -LiteralPath "reports/dataset_audit.md" -PathType Leaf) {
+        Copy-Item -LiteralPath "reports/dataset_audit.md" -Destination (Join-Path $runDirectory "dataset_audit.md") -Force
     }
 
     Invoke-PythonStep -Label "Evaluating the best checkpoint" -Arguments @(

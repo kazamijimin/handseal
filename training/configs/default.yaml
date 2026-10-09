@@ -20,6 +20,7 @@ training:
   epochs: 20
   batch_size: 32
   num_workers: 0
+  balanced_sampling: true
   learning_rate: 0.001
   weight_decay: 0.0001
   patience: 5

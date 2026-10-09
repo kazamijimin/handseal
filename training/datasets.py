@@ -3,13 +3,14 @@
 from __future__ import annotations
 
 import random
+from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
 import torch
 from PIL import Image, ImageEnhance, ImageOps
-from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import DataLoader, Dataset, WeightedRandomSampler
 
 from .config import class_names, dataset_root, image_size, normalization
 
@@ -129,6 +130,17 @@ def class_weights(records: list[ImageRecord], names: list[str]) -> torch.Tensor:
     return counts.sum() / (len(names) * counts)
 
 
+def sample_weights(records: list[ImageRecord]) -> torch.Tensor:
+    """Return inverse-frequency weights for balanced replacement sampling."""
+    counts = Counter(record.label for record in records)
+    if not records or any(count == 0 for count in counts.values()):
+        raise ValueError("Cannot build balanced sampling weights for an empty dataset.")
+    return torch.tensor(
+        [1.0 / counts[record.label] for record in records],
+        dtype=torch.double,
+    )
+
+
 def build_dataset(config: dict, split: str, training: bool = False) -> HandSealDataset:
     names = class_names(config)
     records = list_records(
@@ -170,10 +182,22 @@ def build_loaders(config: dict) -> tuple[DataLoader, DataLoader, list[ImageRecor
     workers = int(loader_config.get("num_workers", 0))
     generator = torch.Generator()
     generator.manual_seed(int(config.get("seed", 42)))
+    use_balanced_sampling = bool(loader_config.get("balanced_sampling", True))
+    sampler = (
+        WeightedRandomSampler(
+            sample_weights(train_records),
+            num_samples=len(train_records),
+            replacement=True,
+            generator=generator,
+        )
+        if use_balanced_sampling
+        else None
+    )
     train_loader = DataLoader(
         train_dataset,
         batch_size=batch_size,
-        shuffle=True,
+        shuffle=sampler is None,
+        sampler=sampler,
         num_workers=workers,
         pin_memory=torch.cuda.is_available(),
         generator=generator,

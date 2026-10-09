@@ -31,7 +31,7 @@ def classification_metrics(
         output_dict=True,
         zero_division=0,
     )
-    return {
+    metrics = {
         "accuracy": float(accuracy_score(targets, predictions)),
         "balanced_accuracy": float(
             balanced_accuracy_score(targets, predictions)
@@ -60,6 +60,18 @@ def classification_metrics(
             labels=list(range(len(class_names))),
         ).tolist(),
     }
+    if "no_seal" in class_names:
+        neutral_index = class_names.index("no_seal")
+        neutral_support = sum(target == neutral_index for target in targets)
+        neutral_misses = sum(
+            target == neutral_index and prediction != neutral_index
+            for target, prediction in zip(targets, predictions)
+        )
+        metrics["no_seal_recall"] = metrics["per_class"]["no_seal"]["recall"]
+        metrics["no_seal_missed_rate"] = float(
+            neutral_misses / neutral_support if neutral_support else 0.0
+        )
+    return metrics
 
 
 def write_metrics(metrics: dict, destination: str | Path) -> None:

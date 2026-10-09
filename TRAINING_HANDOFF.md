@@ -64,7 +64,10 @@ handseal_dataset/
 The current source dataset has an empty `no_seal` class. Training will stop
 until every configured class has at least one training and validation image.
 Collect new samples into `handseal_collected/` by default so the source dataset
-is not changed accidentally.
+is not changed accidentally. The improved target is five participants with
+approximately 100 images per class per participant. Assign three participants
+to train, one to validation, and one to test; do not mix a participant across
+splits.
 
 For meaningful generalization, collect all five classes from multiple people,
 backgrounds, distances, lighting conditions, and hand positions. Use unique
@@ -78,11 +81,22 @@ Run these commands from `HandSealProject`:
 ```powershell
 python -m data_tools.audit_dataset --dataset-root handseal_dataset
 python -m data_tools.split_manifest --dataset-root handseal_dataset
+python -m data_tools.review_dataset --dataset-root handseal_dataset
 ```
 
 Outputs are written under `reports/`. The audit does not modify source images.
-It reports class counts, corrupt files, dimensions, exact duplicate groups, and
-source-key groups that cross splits.
+It reports class counts, balance, corrupt and unsupported files, dimensions,
+aspect ratios, exact and near-duplicate groups, missing metadata, and
+participant/session/source groups that cross splits. Use `--strict` before a
+training run to fail on empty classes, missing metadata, corruption, and
+leakage:
+
+```powershell
+python -m data_tools.audit_dataset --dataset-root handseal_dataset_v2 --strict
+```
+
+Contact sheets are written to `reports/dataset_review/` for manual label and
+cropping review.
 
 ## Data collection
 
@@ -90,13 +104,31 @@ Collect one class at a time. The default output is separate from the source
 dataset:
 
 ```powershell
-python -m data_tools.collect_webcam --participant P01 --split train --label no_seal
-python -m data_tools.collect_webcam --participant P01 --split valid --label no_seal
+python -m data_tools.collect_webcam --participant P01 --session S01 --split train --label no_seal --images-per-clip 100 --seconds 30
 ```
 
-Repeat for multiple participants and all five labels. For `no_seal`, capture
-ordinary frames without a valid hand sign, including different backgrounds and
-hand positions.
+Every collection command requires a participant and session ID and writes
+`metadata.jsonl` beside the collected split folders. Optional metadata fields
+describe lighting, background, distance, and hand position. Repeat for five
+participants and all five labels. For `no_seal`, capture ordinary frames
+without a valid hand sign, including no hand, hands lowered, empty background,
+hand outside the crop, and sign transitions.
+
+Keep the participant split assignment fixed, for example:
+
+```text
+P01/P02/P03 -> train
+P04          -> valid
+P05          -> test
+```
+
+Do not copy images into `handseal_dataset` until the metadata, audit, and
+contact-sheet review are complete. A versioned dataset can be trained by
+passing its root to the wrapper:
+
+```powershell
+.\training.ps1 -DatasetRoot handseal_dataset_v2
+```
 
 ## Training
 
@@ -125,8 +157,11 @@ The wrapper also supports resuming from a checkpoint:
 .\training.ps1 -Resume artifacts\small_cnn_v1\last.pt -RunName small_cnn_v1_resume
 ```
 
-It writes checkpoints under `artifacts/<run-name>/`, test reports under
-`reports/`, and the exported model plus metadata under `artifacts/exports/`.
+It first runs a strict audit. If any class is empty, metadata is missing,
+images are corrupt, or a split leak is detected, it stops before training. It
+writes checkpoints and the exact dataset manifest under
+`artifacts/<run-name>/`, test reports under `reports/`, and the exported model
+plus metadata under `artifacts/exports/`.
 
 Train the baseline:
 
@@ -164,7 +199,9 @@ python -m training.evaluate --config training/configs/default.yaml --checkpoint 
 ```
 
 Reports include accuracy, balanced accuracy, macro-F1, per-class precision/
-recall/F1/support, and a confusion-matrix image.
+recall/F1/support, `no_seal` recall and missed-rate, and a confusion-matrix
+image. Balanced replacement sampling is enabled by default when class counts
+remain uneven.
 
 Model selection should prioritize macro-F1 and per-class recall. Do not tune on
 the test split.
@@ -235,6 +272,26 @@ python -m pip install -r requirements-voice.txt
 The challenge requires an exported trained model and never uses an untrained
 model as recognition evidence.
 
+## Webcam runtime validation
+
+Runtime validation is stored separately from training data. After exporting a
+model, capture centered, multi-person, distance, background, and transition
+scenarios with:
+
+```powershell
+python -m data_tools.collect_runtime_validation `
+  --metadata artifacts/exports/<run>.metadata.json `
+  --participant P05 `
+  --session runtime01 `
+  --scenario transition `
+  --expected-label transition
+```
+
+Runtime-validation images are written under `runtime_validation/` and are not
+read by the training loader. Use them to check words, confidence, stable-hold
+behavior, neutral transitions, false `no_seal` detections, and challenge-mode
+usability.
+
 ## Later: two-player webcam battle
 
 Install the dependencies first, then run the model-free demo:
@@ -276,8 +333,11 @@ generalization, latency, or final training evidence.
 ## Known limitations
 
 - The current dataset is imbalanced and has no populated `no_seal` class.
+- The legacy source dataset has no participant/session metadata. It cannot be
+  used as evidence of person-disjoint generalization until a participant-aware
+  dataset is assembled.
 - Folder splits may contain related images or capture-session leakage until the
-  audit report confirms otherwise.
+  strict audit and manifest are run.
 - The collector uses a centered square crop and therefore assumes the subject
   is inside that region.
 - Camera index `0` has been validated to open and return a frame locally; the

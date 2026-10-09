@@ -16,6 +16,7 @@ from .config import class_names, load_config, save_config, set_seed
 from .datasets import build_loaders, class_weights
 from .metrics import classification_metrics
 from .models import build_model
+from data_tools.split_manifest import write_manifest
 
 
 def evaluate_loader(model, loader, device, names):
@@ -78,6 +79,10 @@ def parse_args():
     parser.add_argument("--model", choices=("small_cnn", "mobilenetv3_small"))
     parser.add_argument("--run-name")
     parser.add_argument("--resume", help="Checkpoint path to resume from.")
+    parser.add_argument(
+        "--dataset-root",
+        help="Override data.root in the config for this run.",
+    )
     parser.add_argument("--device", default="auto", choices=("auto", "cpu", "cuda"))
     return parser.parse_args()
 
@@ -86,6 +91,8 @@ def main() -> int:
     args = parse_args()
     config = load_config(args.config)
     config.setdefault("training", {})
+    if args.dataset_root:
+        config.setdefault("data", {})["root"] = args.dataset_root
     if args.model:
         config["training"]["model"] = args.model
     names = class_names(config)
@@ -113,6 +120,21 @@ def main() -> int:
         ).to(device)
     except (RuntimeError, ValueError) as exc:
         raise SystemExit(str(exc)) from exc
+    manifest_path = run_dir / "dataset_manifest.jsonl"
+    manifest_rows = write_manifest(
+        config["data"].get("root", "handseal_dataset"),
+        names,
+        manifest_path,
+    )
+    print(f"Dataset manifest rows: {manifest_rows}")
+    train_counts = {name: 0 for name in names}
+    for record in train_records:
+        train_counts[record.class_name] += 1
+    valid_counts = {name: 0 for name in names}
+    for record in valid_loader.dataset.records:
+        valid_counts[record.class_name] += 1
+    print(f"Train class counts: {train_counts}")
+    print(f"Valid class counts: {valid_counts}")
     weights = class_weights(train_records, names).to(device)
     criterion = nn.CrossEntropyLoss(weight=weights)
     optimizer = torch.optim.AdamW(
