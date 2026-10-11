@@ -1,0 +1,23 @@
+seed: 42
+deterministic: true
+data:
+  root: handseal_dataset_external_v2
+  classes: [dragon, ram, snake, tiger, no_seal]
+  image_size: 224
+  normalization:
+    mean: [0.485, 0.456, 0.406]
+    std: [0.229, 0.224, 0.225]
+training:
+  model: mobilenetv3_small
+  pretrained: true
+  epochs: 30
+  batch_size: 32
+  num_workers: 2
+  # Class-weighted loss already compensates for imbalance; avoid also oversampling.
+  balanced_sampling: false
+  learning_rate: 0.0003
+  weight_decay: 0.0001
+  patience: 7
+  output_dir: artifacts
+  report_dir: reports/external_baseline_v1
+  freeze_backbone: true

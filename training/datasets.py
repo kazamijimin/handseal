@@ -70,11 +70,13 @@ class HandSealTransform:
         mean: list[float],
         std: list[float],
         training: bool,
+        robust_augmentation: bool = False,
     ) -> None:
         self.size = size
         self.mean = mean
         self.std = std
         self.training = training
+        self.robust_augmentation = robust_augmentation
 
     def __call__(self, image: Image.Image):
         image = ImageOps.fit(
@@ -84,6 +86,19 @@ class HandSealTransform:
             centering=(0.5, 0.5),
         )
         if self.training:
+            if self.robust_augmentation:
+                # Zoom out before translating: preserve fingers rather than randomly crop them.
+                side = round(self.size * random.uniform(0.85, 0.95))
+                margin = self.size - side
+                canvas = Image.new('RGB', (self.size, self.size), image.getpixel((0, 0)))
+                canvas.paste(image.resize((side, side), Image.Resampling.BILINEAR),
+                             (random.randint(0, margin), random.randint(0, margin)))
+                image = canvas
+                image = ImageEnhance.Brightness(image).enhance(random.uniform(0.65, 1.35))
+                image = ImageEnhance.Contrast(image).enhance(random.uniform(0.65, 1.35))
+                image = ImageEnhance.Color(image).enhance(random.uniform(0.5, 1.5))
+                if random.random() < 0.2:
+                    image = ImageOps.grayscale(image).convert('RGB')
             if random.random() < 0.35:
                 image = image.rotate(
                     random.uniform(-8.0, 8.0),
@@ -152,7 +167,8 @@ def build_dataset(config: dict, split: str, training: bool = False) -> HandSealD
     if not records:
         raise ValueError(f"Split '{split}' contains no supported image files.")
     mean, std = normalization(config)
-    transform = HandSealTransform(image_size(config), mean, std, training)
+    transform = HandSealTransform(image_size(config), mean, std, training,
+                                  bool(config.get('data', {}).get('robust_augmentation', False)))
     return HandSealDataset(records, transform)
 
 
@@ -167,6 +183,7 @@ def build_loaders(config: dict) -> tuple[DataLoader, DataLoader, list[ImageRecor
             image_size(config),
             *normalization(config),
             training=True,
+            robust_augmentation=bool(config.get('data', {}).get('robust_augmentation', False)),
         ),
     )
     valid_dataset = HandSealDataset(

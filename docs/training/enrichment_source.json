@@ -1,0 +1,10 @@
+{
+  "source": "lucas_fernando_github",
+  "added": 400,
+  "excluded_duplicates_or_held_out_neighbors": 0,
+  "archive_sha256": "eb32b0a2e45e4cd9e665923b01e270764c7cb6c22b09a7ce68e83f375cc50a43",
+  "source_repository": "https://github.com/lucasfernandoprojects/hand-sign-detection",
+  "repository_license": "GPL-3.0; no separate image license found",
+  "policy": "all new-source samples are training only; original valid/test unchanged",
+  "source_tree_sha": "4add57be0bbedabac4230e770ab4735ef06e763e"
+}

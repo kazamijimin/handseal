@@ -39,8 +39,14 @@ def evaluate_loader(model, loader, device, names):
     return metrics
 
 
-def train_epoch(model, loader, optimizer, criterion, device):
+def train_epoch(model, loader, optimizer, criterion, device, freeze_backbone=False, freeze_batchnorm=False):
     model.train()
+    if freeze_backbone:
+        model.features.eval()
+    if freeze_batchnorm:
+        for module in model.modules():
+            if isinstance(module, nn.modules.batchnorm._BatchNorm):
+                module.eval()
     total_loss = 0.0
     batches = 0
     for inputs, labels in loader:
@@ -136,9 +142,15 @@ def main() -> int:
     print(f"Train class counts: {train_counts}")
     print(f"Valid class counts: {valid_counts}")
     weights = class_weights(train_records, names).to(device)
+    freeze_backbone = bool(training_config.get("freeze_backbone", False))
+    if freeze_backbone:
+        if model_name != "mobilenetv3_small":
+            raise SystemExit("freeze_backbone is supported only for mobilenetv3_small.")
+        for parameter in model.features.parameters():
+            parameter.requires_grad_(False)
     criterion = nn.CrossEntropyLoss(weight=weights)
     optimizer = torch.optim.AdamW(
-        model.parameters(),
+        [parameter for parameter in model.parameters() if parameter.requires_grad],
         lr=float(training_config.get("learning_rate", 0.001)),
         weight_decay=float(training_config.get("weight_decay", 0.0001)),
     )
@@ -169,7 +181,10 @@ def main() -> int:
     print(f"Run directory: {run_dir.resolve()}")
 
     for epoch in range(start_epoch, epochs + 1):
-        train_loss = train_epoch(model, train_loader, optimizer, criterion, device)
+        train_loss = train_epoch(
+            model, train_loader, optimizer, criterion, device, freeze_backbone,
+            bool(training_config.get("freeze_batchnorm", False)),
+        )
         valid_metrics = evaluate_loader(model, valid_loader, device, names)
         scheduler.step(valid_metrics["macro_f1"])
         row = {
