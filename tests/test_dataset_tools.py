@@ -8,6 +8,7 @@ from pathlib import Path
 from PIL import Image
 
 from data_tools.audit_dataset import audit_dataset, strict_issues
+from data_tools.collect_webcam import capture_timer_text, countdown_text
 from data_tools.metadata import METADATA_FILENAME
 from data_tools.review_dataset import create_contact_sheet
 from data_tools.split_manifest import build_manifest
@@ -24,6 +25,14 @@ def make_dataset(root: Path) -> None:
 
 
 class DatasetToolTests(unittest.TestCase):
+    def test_capture_timer_shows_ready_and_remaining_time(self):
+        self.assertEqual(capture_timer_text(False, 10.0, 0.0, 30.0), "READY: 30.0s")
+        self.assertEqual(capture_timer_text(True, 12.5, 10.0, 30.0), "TIME LEFT: 27.5s")
+        self.assertEqual(capture_timer_text(True, 50.0, 10.0, 30.0), "TIME LEFT: 00.0s")
+        self.assertEqual(countdown_text(10.0, 10.0, 3.0), "STARTING IN: 3")
+        self.assertEqual(countdown_text(10.0, 12.2, 3.0), "STARTING IN: 1")
+        self.assertEqual(countdown_text(10.0, 13.0, 3.0), "")
+
     def test_audit_reports_balance_metadata_and_leakage(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

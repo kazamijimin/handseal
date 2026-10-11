@@ -40,6 +40,7 @@ def main() -> int:
     parser.add_argument("--seconds", type=float, default=10.0)
     parser.add_argument("--interval", type=float, default=0.25)
     parser.add_argument("--crop-ratio", type=float, default=0.60)
+    parser.add_argument("--input-mode", choices=("center", "full"), default="center")
     parser.add_argument("--device", default="cpu")
     args = parser.parse_args()
     if args.seconds <= 0 or args.interval <= 0:
@@ -53,11 +54,15 @@ def main() -> int:
         raise SystemExit("OpenCV is required. Install requirements.txt first.") from exc
 
     from app.artifact_inference import TorchScriptSignPredictor
-    from app.camera import center_crop, open_camera
+    from app.camera import model_input, model_input_bounds, open_camera
     from app.sign_labels import prediction_words
 
     try:
-        predictor = TorchScriptSignPredictor.from_metadata(args.metadata, device=args.device)
+        predictor = TorchScriptSignPredictor.from_metadata(
+            args.metadata,
+            device=args.device,
+            resize_mode=("letterbox" if args.input_mode == "full" else "fit"),
+        )
         camera = open_camera(args.camera)
     except (FileNotFoundError, KeyError, RuntimeError, ValueError) as exc:
         raise SystemExit(f"Could not start runtime validation: {exc}") from exc
@@ -79,9 +84,16 @@ def main() -> int:
             if not success:
                 raise SystemExit("The camera returned an unreadable frame.")
             now = time.monotonic()
-            prediction = predictor.predict(center_crop(frame, args.crop_ratio))
+            input_frame = model_input(frame, args.input_mode, args.crop_ratio)
+            prediction = predictor.predict(input_frame)
             display = cv2.flip(frame, 1)
             height, width = display.shape[:2]
+            x1, y1, x2, y2 = model_input_bounds(
+                frame.shape,
+                args.input_mode,
+                args.crop_ratio,
+            )
+            cv2.rectangle(display, (x1, y1), (x2, y2), (255, 255, 255), 2)
             headline, detail = prediction_words(prediction.label, prediction.confidence)
             cv2.putText(display, headline, (20, 38), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
             cv2.putText(display, detail, (20, 70), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (220, 220, 220), 2)
@@ -97,7 +109,7 @@ def main() -> int:
             cv2.imshow("HandSeal Runtime Validation", display)
 
             if now >= next_capture:
-                crop = center_crop(frame, args.crop_ratio)
+                crop = input_frame
                 filename = f"{prefix}_{saved_count + 1:04d}.jpg"
                 image_path = output_dir / filename
                 if not cv2.imwrite(str(image_path), crop):

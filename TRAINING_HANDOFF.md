@@ -114,6 +114,11 @@ participants and all five labels. For `no_seal`, capture ordinary frames
 without a valid hand sign, including no hand, hands lowered, empty background,
 hand outside the crop, and sign transitions.
 
+The collector window shows the current split and label, a three-second
+`STARTING IN` countdown before capture, the recording countdown, and the
+number of images captured in the current clip. The countdown duration can be
+changed with `--countdown-seconds`.
+
 Keep the participant split assignment fixed, for example:
 
 ```text
@@ -240,6 +245,21 @@ single-sign recognition:
 python -m app.run_hand_sign --mode model --metadata artifacts/exports/<run>.metadata.json
 ```
 
+The default `center` input mode uses the same centered square crop as dataset
+collection. To experiment with the complete camera frame, use full-frame
+letterboxing:
+
+```powershell
+python -m app.run_hand_sign `
+  --mode model `
+  --metadata artifacts/exports/<run>.metadata.json `
+  --input-mode full
+```
+
+Full mode preserves the entire camera frame by letterboxing it into the model's
+square input. It is useful for diagnosis, but it is not expected to improve
+accuracy until the model is retrained with full-frame examples.
+
 The window displays human-readable words such as `Detected hand sign: Dragon`,
 the best-guess label, and confidence. Weak predictions display `Uncertain hand
 sign`; `no_seal` displays `No hand sign detected`. Use
@@ -284,7 +304,8 @@ python -m data_tools.collect_runtime_validation `
   --participant P05 `
   --session runtime01 `
   --scenario transition `
-  --expected-label transition
+  --expected-label transition `
+  --input-mode center
 ```
 
 Runtime-validation images are written under `runtime_validation/` and are not
@@ -340,6 +361,8 @@ generalization, latency, or final training evidence.
   strict audit and manifest are run.
 - The collector uses a centered square crop and therefore assumes the subject
   is inside that region.
+- Full-frame inference is available as an experimental diagnostic mode, but
+  the current exported model was trained on square crops.
 - Camera index `0` has been validated to open and return a frame locally; the
   two-person battle behavior still requires manual testing.
 - The first battle version uses fixed left/right zones and does not track people

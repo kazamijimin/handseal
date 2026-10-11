@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import math
 import re
 import time
 from datetime import datetime, timezone
@@ -43,6 +44,23 @@ def crop_center(frame, ratio: float):
     return frame[y1 : y1 + side, x1 : x1 + side]
 
 
+def capture_timer_text(recording: bool, now: float, started_at: float, duration: float) -> str:
+    """Return the user-facing capture countdown for the collector window."""
+    remaining = duration if not recording else max(0.0, duration - (now - started_at))
+    prefix = "READY" if not recording else "TIME LEFT"
+    return f"{prefix}: {remaining:04.1f}s"
+
+
+def countdown_text(countdown_started_at: float | None, now: float, duration: float) -> str:
+    """Return the visible pre-capture countdown, or an empty string when idle."""
+    if countdown_started_at is None:
+        return ""
+    remaining = duration - (now - countdown_started_at)
+    if remaining <= 0:
+        return ""
+    return f"STARTING IN: {max(1, math.ceil(remaining))}"
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--participant", required=True)
@@ -56,6 +74,7 @@ def main() -> int:
     parser.add_argument("--hand-position", default="unspecified")
     parser.add_argument("--camera", type=int, default=0)
     parser.add_argument("--seconds", type=float, default=8.0)
+    parser.add_argument("--countdown-seconds", type=float, default=3.0)
     parser.add_argument("--images-per-clip", type=int, default=18)
     parser.add_argument("--crop-ratio", type=float, default=0.60)
     args = parser.parse_args()
@@ -67,8 +86,11 @@ def main() -> int:
             "OpenCV is required for webcam collection. Install requirements.txt first."
         ) from exc
 
-    if args.images_per_clip < 1 or args.seconds <= 0:
-        raise SystemExit("--seconds must be positive and --images-per-clip must be at least 1.")
+    if args.images_per_clip < 1 or args.seconds <= 0 or args.countdown_seconds <= 0:
+        raise SystemExit(
+            "--seconds and --countdown-seconds must be positive, "
+            "and --images-per-clip must be at least 1."
+        )
 
     participant = safe_token(args.participant)
     session = safe_token(args.session)
@@ -84,6 +106,7 @@ def main() -> int:
         list(output_dir.glob(f"{participant}_{session}_{args.label}_*.jpg"))
     )
     recording = False
+    countdown_started_at = None
     started_at = 0.0
     next_capture = 0.0
     captured = 0
@@ -94,13 +117,19 @@ def main() -> int:
             success, frame = camera.read()
             if not success:
                 raise SystemExit("The camera returned an unreadable frame.")
+            now = time.monotonic()
+            if countdown_started_at is not None and now - countdown_started_at >= args.countdown_seconds:
+                countdown_started_at = None
+                recording = True
+                started_at = now
+                next_capture = now
             display = cv2.flip(frame, 1)
             height, width = display.shape[:2]
             side = int(min(width, height) * args.crop_ratio)
             x1 = (width - side) // 2
             y1 = (height - side) // 2
             cv2.rectangle(display, (x1, y1), (x1 + side, y1 + side), (255, 255, 255), 2)
-            status = "RECORDING" if recording else "READY"
+            status = "RECORDING" if recording else ("COUNTDOWN" if countdown_started_at else "READY")
             cv2.putText(
                 display,
                 f"{args.participant} | {args.split}/{args.label} | {status}",
@@ -108,6 +137,20 @@ def main() -> int:
                 cv2.FONT_HERSHEY_SIMPLEX,
                 0.65,
                 (255, 255, 255),
+                2,
+            )
+            timer_line = (
+                countdown_text(countdown_started_at, now, args.countdown_seconds)
+                if countdown_started_at is not None
+                else capture_timer_text(recording, now, started_at, args.seconds)
+            )
+            cv2.putText(
+                display,
+                f"{timer_line} | Images: {captured}/{args.images_per_clip}",
+                (20, 65),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.65,
+                (0, 255, 255) if recording or countdown_started_at else (255, 255, 255),
                 2,
             )
             cv2.putText(
@@ -121,7 +164,6 @@ def main() -> int:
             )
             cv2.imshow("HandSeal Dataset Collector", display)
 
-            now = time.monotonic()
             if recording and now >= next_capture:
                 crop = crop_center(frame, args.crop_ratio)
                 filename = f"{participant}_{session}_{args.label}_{saved_count + captured + 1:04d}.jpg"
@@ -159,10 +201,8 @@ def main() -> int:
             key = cv2.waitKey(1) & 0xFF
             if key == ord("q"):
                 break
-            if key == ord("r") and not recording:
-                recording = True
-                started_at = time.monotonic()
-                next_capture = started_at
+            if key == ord("r") and not recording and countdown_started_at is None:
+                countdown_started_at = time.monotonic()
     finally:
         camera.release()
         cv2.destroyAllWindows()

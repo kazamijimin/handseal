@@ -28,6 +28,7 @@ class TorchScriptSignPredictor:
         mean: list[float],
         std: list[float],
         device: str = "cpu",
+        resize_mode: str = "fit",
     ) -> None:
         if not class_names:
             raise ValueError("Artifact metadata must contain class_names.")
@@ -38,10 +39,18 @@ class TorchScriptSignPredictor:
         self.mean = torch.tensor(mean, dtype=torch.float32).view(3, 1, 1)
         self.std = torch.tensor(std, dtype=torch.float32).view(3, 1, 1)
         self.device = torch.device(device)
+        if resize_mode not in {"fit", "letterbox"}:
+            raise ValueError("resize_mode must be 'fit' or 'letterbox'.")
+        self.resize_mode = resize_mode
         self.model.to(self.device)
 
     @classmethod
-    def from_metadata(cls, metadata_path: str | Path, device: str = "cpu"):
+    def from_metadata(
+        cls,
+        metadata_path: str | Path,
+        device: str = "cpu",
+        resize_mode: str = "fit",
+    ):
         metadata_file = Path(metadata_path)
         with metadata_file.open("r", encoding="utf-8") as handle:
             metadata = json.load(handle)
@@ -59,6 +68,7 @@ class TorchScriptSignPredictor:
             mean=list(normalization.get("mean", [0.485, 0.456, 0.406])),
             std=list(normalization.get("std", [0.229, 0.224, 0.225])),
             device=device,
+            resize_mode=resize_mode,
         )
 
     def _preprocess(self, bgr_frame):
@@ -66,12 +76,29 @@ class TorchScriptSignPredictor:
             raise ValueError("Expected a BGR image with three channels.")
         rgb_frame = bgr_frame[:, :, ::-1]
         image = Image.fromarray(np.ascontiguousarray(rgb_frame)).convert("RGB")
-        image = ImageOps.fit(
-            image,
-            (self.image_size, self.image_size),
-            method=Image.Resampling.BILINEAR,
-            centering=(0.5, 0.5),
-        )
+        if self.resize_mode == "fit":
+            image = ImageOps.fit(
+                image,
+                (self.image_size, self.image_size),
+                method=Image.Resampling.BILINEAR,
+                centering=(0.5, 0.5),
+            )
+        else:
+            image.thumbnail(
+                (self.image_size, self.image_size),
+                Image.Resampling.BILINEAR,
+            )
+            letterboxed = Image.new(
+                "RGB",
+                (self.image_size, self.image_size),
+                color=(0, 0, 0),
+            )
+            offset = (
+                (self.image_size - image.width) // 2,
+                (self.image_size - image.height) // 2,
+            )
+            letterboxed.paste(image, offset)
+            image = letterboxed
         array = np.asarray(image, dtype=np.float32) / 255.0
         tensor = torch.from_numpy(array.copy()).permute(2, 0, 1)
         tensor = (tensor - self.mean) / self.std

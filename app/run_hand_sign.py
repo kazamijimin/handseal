@@ -8,7 +8,7 @@ import time
 from .artifact_inference import TorchScriptSignPredictor
 from .challenge import ChallengeSession
 from .challenge_ui import draw_challenge_overlay
-from .camera import center_crop, center_square_bounds, open_camera
+from .camera import model_input, model_input_bounds, open_camera
 from .sign_labels import prediction_words
 from .sign_labels import display_name
 from .voice import OptionalVoice
@@ -26,6 +26,12 @@ def parse_args():
     parser.add_argument("--camera", type=int, default=0)
     parser.add_argument("--device", default="cpu")
     parser.add_argument("--crop-ratio", type=float, default=0.60)
+    parser.add_argument(
+        "--input-mode",
+        choices=("center", "full"),
+        default="center",
+        help="Use the trained center crop or the complete camera frame.",
+    )
     parser.add_argument("--confidence-threshold", type=float, default=0.80)
     parser.add_argument("--seed", type=int, default=42)
     return parser.parse_args()
@@ -49,7 +55,11 @@ def main() -> int:
 
     try:
         predictor = (
-            TorchScriptSignPredictor.from_metadata(args.metadata, device=args.device)
+            TorchScriptSignPredictor.from_metadata(
+                args.metadata,
+                device=args.device,
+                resize_mode=("letterbox" if args.input_mode == "full" else "fit"),
+            )
             if args.mode in {"model", "challenge"}
             else None
         )
@@ -71,9 +81,13 @@ def main() -> int:
                 raise SystemExit("The camera returned an unreadable frame.")
             now = time.monotonic()
 
-            crop = center_crop(frame, args.crop_ratio)
+            crop = model_input(frame, args.input_mode, args.crop_ratio)
             display = cv2.flip(frame, 1)
-            x1, y1, x2, y2 = center_square_bounds(frame.shape, args.crop_ratio)
+            x1, y1, x2, y2 = model_input_bounds(
+                frame.shape,
+                args.input_mode,
+                args.crop_ratio,
+            )
 
             if predictor is None:
                 headline = "PREVIEW ONLY - no model loaded"

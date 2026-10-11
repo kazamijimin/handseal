@@ -12,7 +12,14 @@ import torch
 
 from app.artifact_inference import TorchScriptSignPredictor
 from app.battle.state import BattleState, Jutsu, JutsuCatalog, SequenceTracker
-from app.camera import center_crop, center_square_bounds, open_camera, split_player_zones
+from app.camera import (
+    center_crop,
+    center_square_bounds,
+    model_input,
+    model_input_bounds,
+    open_camera,
+    split_player_zones,
+)
 from app.demo_input import DemoInput
 from app.sign_labels import display_name, prediction_words
 
@@ -48,6 +55,11 @@ class BattleTests(unittest.TestCase):
         crop = center_crop(frame, 0.60)
         self.assertEqual(crop.shape, (y2 - y1, x2 - x1, 3))
         self.assertEqual(crop.shape[0], crop.shape[1])
+
+    def test_full_input_mode_uses_complete_frame(self):
+        frame = np.zeros((480, 640, 3), dtype=np.uint8)
+        self.assertEqual(model_input(frame, "full").shape, frame.shape)
+        self.assertEqual(model_input_bounds(frame.shape, "full"), (0, 0, 640, 480))
 
     def test_camera_dependency_error_is_clear(self):
         with patch.dict(sys.modules, {"cv2": None}):
@@ -185,6 +197,15 @@ class BattleTests(unittest.TestCase):
             prediction = predictor.predict(np.zeros((40, 40, 3), dtype=np.uint8))
             self.assertEqual(prediction.label, "snake")
             self.assertGreater(prediction.confidence, 0.9)
+
+            full_frame_predictor = TorchScriptSignPredictor.from_metadata(
+                metadata_path,
+                resize_mode="letterbox",
+            )
+            inputs = full_frame_predictor._preprocess(
+                np.zeros((40, 80, 3), dtype=np.uint8)
+            )
+            self.assertEqual(tuple(inputs.shape), (1, 3, 224, 224))
 
 
 if __name__ == "__main__":

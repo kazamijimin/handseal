@@ -36,6 +36,24 @@ def center_crop(frame, ratio: float = 0.60):
     return frame[y1:y2, x1:x2]
 
 
+def model_input_bounds(frame_shape, input_mode: str = "center", ratio: float = 0.60):
+    """Return the displayed region used as model input."""
+    if input_mode == "full":
+        if len(frame_shape) < 2:
+            raise ValueError("A valid image shape is required.")
+        height, width = frame_shape[:2]
+        return 0, 0, width, height
+    if input_mode != "center":
+        raise ValueError("input_mode must be 'center' or 'full'.")
+    return center_square_bounds(frame_shape, ratio)
+
+
+def model_input(frame, input_mode: str = "center", ratio: float = 0.60):
+    """Return the center crop or the complete frame for model inference."""
+    x1, y1, x2, y2 = model_input_bounds(frame.shape, input_mode, ratio)
+    return frame[y1:y2, x1:x2]
+
+
 def open_camera(index: int = 0):
     try:
         import cv2
