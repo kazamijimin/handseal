@@ -6,4 +6,8 @@ handseal_dataset_external_*/
 handseal_collected/
 runtime_validation/
 artifacts/*/
+!artifacts/exports/
+artifacts/exports/*
+!artifacts/exports/external_mobilenetv3_v1.torchscript.pt
+!artifacts/exports/external_mobilenetv3_v1.metadata.json
 reports/external_baseline*/
