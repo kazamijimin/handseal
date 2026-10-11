@@ -1,0 +1,1623 @@
+{
+  "date": "2026-10-11",
+  "branch": "training",
+  "repository": "https://github.com/kazamijimin/handseal",
+  "selected_run": "external_mobilenetv3_v1",
+  "selection_rule": "highest validation macro-F1; test evaluated once after candidate selection",
+  "dataset_counts": {
+    "train": {
+      "dragon": 117,
+      "ram": 93,
+      "snake": 115,
+      "tiger": 132,
+      "no_seal": 395
+    },
+    "valid": {
+      "dragon": 20,
+      "ram": 15,
+      "snake": 18,
+      "tiger": 20,
+      "no_seal": 96
+    },
+    "test": {
+      "dragon": 19,
+      "ram": 14,
+      "snake": 18,
+      "tiger": 20,
+      "no_seal": 93
+    }
+  },
+  "dataset_fingerprint": "dadd10b0a7640c0c717811ba7c2f366514be195b9093e56a7077fcd8ca25bed2",
+  "unknown_capture_metadata_images": 1185,
+  "audit_checks": {
+    "corrupt_images": 0,
+    "metadata_mismatches": 0,
+    "cross_split_exact_duplicate_groups": 0,
+    "cross_split_near_duplicate_groups": 0,
+    "cross_split_source_groups": 0,
+    "cross_split_participant_groups": 0,
+    "cross_split_session_groups": 0
+  },
+  "runs": {
+    "external_mobilenetv3_v1": {
+      "epochs_completed": 8,
+      "selected_epoch": 1,
+      "best_validation_macro_f1": 0.3733199262611028,
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.4617334813638418,
+          "learning_rate": 0.0003,
+          "valid": {
+            "accuracy": 0.650887573964497,
+            "balanced_accuracy": 0.35805555555555557,
+            "macro_f1": 0.3733199262611028,
+            "per_class": {
+              "dragon": {
+                "precision": 0.8571428571428571,
+                "recall": 0.3,
+                "f1": 0.4444444444444444,
+                "support": 20
+              },
+              "ram": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 15
+              },
+              "snake": {
+                "precision": 0.2222222222222222,
+                "recall": 0.1111111111111111,
+                "f1": 0.14814814814814814,
+                "support": 18
+              },
+              "tiger": {
+                "precision": 0.5714285714285714,
+                "recall": 0.4,
+                "f1": 0.47058823529411764,
+                "support": 20
+              },
+              "no_seal": {
+                "precision": 0.6811594202898551,
+                "recall": 0.9791666666666666,
+                "f1": 0.8034188034188035,
+                "support": 96
+              }
+            },
+            "confusion_matrix": [
+              [
+                6,
+                0,
+                3,
+                4,
+                7
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                15
+              ],
+              [
+                1,
+                1,
+                2,
+                1,
+                13
+              ],
+              [
+                0,
+                0,
+                3,
+                8,
+                9
+              ],
+              [
+                0,
+                0,
+                1,
+                1,
+                94
+              ]
+            ],
+            "no_seal_recall": 0.9791666666666666,
+            "no_seal_missed_rate": 0.020833333333333332,
+            "loss": 0.8502490371465683
+          }
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.026296701575456945,
+          "learning_rate": 0.0003,
+          "valid": {
+            "accuracy": 0.6331360946745562,
+            "balanced_accuracy": 0.31333333333333335,
+            "macro_f1": 0.3261601179633966,
+            "per_class": {
+              "dragon": {
+                "precision": 1.0,
+                "recall": 0.2,
+                "f1": 0.3333333333333333,
+                "support": 20
+              },
+              "ram": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 15
+              },
+              "snake": {
+                "precision": 0.3,
+                "recall": 0.16666666666666666,
+                "f1": 0.21428571428571427,
+                "support": 18
+              },
+              "tiger": {
+                "precision": 0.5714285714285714,
+                "recall": 0.2,
+                "f1": 0.2962962962962963,
+                "support": 20
+              },
+              "no_seal": {
+                "precision": 0.6486486486486487,
+                "recall": 1.0,
+                "f1": 0.7868852459016393,
+                "support": 96
+              }
+            },
+            "confusion_matrix": [
+              [
+                4,
+                0,
+                2,
+                3,
+                11
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                15
+              ],
+              [
+                0,
+                0,
+                3,
+                0,
+                15
+              ],
+              [
+                0,
+                0,
+                5,
+                4,
+                11
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                96
+              ]
+            ],
+            "no_seal_recall": 1.0,
+            "no_seal_missed_rate": 0.0,
+            "loss": 1.0749310683459044
+          }
+        },
+        {
+          "epoch": 3,
+          "train_loss": 0.002604544721112621,
+          "learning_rate": 0.0003,
+          "valid": {
+            "accuracy": 0.6094674556213018,
+            "balanced_accuracy": 0.27,
+            "macro_f1": 0.25969899665551843,
+            "per_class": {
+              "dragon": {
+                "precision": 1.0,
+                "recall": 0.3,
+                "f1": 0.46153846153846156,
+                "support": 20
+              },
+              "ram": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 15
+              },
+              "snake": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 18
+              },
+              "tiger": {
+                "precision": 0.3333333333333333,
+                "recall": 0.05,
+                "f1": 0.08695652173913043,
+                "support": 20
+              },
+              "no_seal": {
+                "precision": 0.6,
+                "recall": 1.0,
+                "f1": 0.75,
+                "support": 96
+              }
+            },
+            "confusion_matrix": [
+              [
+                6,
+                0,
+                0,
+                2,
+                12
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                15
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                18
+              ],
+              [
+                0,
+                0,
+                0,
+                1,
+                19
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                96
+              ]
+            ],
+            "no_seal_recall": 1.0,
+            "no_seal_missed_rate": 0.0,
+            "loss": 1.3813964341922353
+          }
+        },
+        {
+          "epoch": 4,
+          "train_loss": 0.00129911604367576,
+          "learning_rate": 0.00015,
+          "valid": {
+            "accuracy": 0.5976331360946746,
+            "balanced_accuracy": 0.25,
+            "macro_f1": 0.2276923076923077,
+            "per_class": {
+              "dragon": {
+                "precision": 1.0,
+                "recall": 0.25,
+                "f1": 0.4,
+                "support": 20
+              },
+              "ram": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 15
+              },
+              "snake": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 18
+              },
+              "tiger": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 20
+              },
+              "no_seal": {
+                "precision": 0.5853658536585366,
+                "recall": 1.0,
+                "f1": 0.7384615384615385,
+                "support": 96
+              }
+            },
+            "confusion_matrix": [
+              [
+                5,
+                0,
+                0,
+                0,
+                15
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                15
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                18
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                20
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                96
+              ]
+            ],
+            "no_seal_recall": 1.0,
+            "no_seal_missed_rate": 0.0,
+            "loss": 1.7188732496773202
+          }
+        },
+        {
+          "epoch": 5,
+          "train_loss": 0.0007834086901749726,
+          "learning_rate": 0.00015,
+          "valid": {
+            "accuracy": 0.591715976331361,
+            "balanced_accuracy": 0.24,
+            "macro_f1": 0.21379310344827585,
+            "per_class": {
+              "dragon": {
+                "precision": 1.0,
+                "recall": 0.2,
+                "f1": 0.3333333333333333,
+                "support": 20
+              },
+              "ram": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 15
+              },
+              "snake": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 18
+              },
+              "tiger": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 20
+              },
+              "no_seal": {
+                "precision": 0.5818181818181818,
+                "recall": 1.0,
+                "f1": 0.735632183908046,
+                "support": 96
+              }
+            },
+            "confusion_matrix": [
+              [
+                4,
+                0,
+                0,
+                0,
+                16
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                15
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                18
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                20
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                96
+              ]
+            ],
+            "no_seal_recall": 1.0,
+            "no_seal_missed_rate": 0.0,
+            "loss": 1.9689758190264304
+          }
+        },
+        {
+          "epoch": 6,
+          "train_loss": 0.0009167439183565202,
+          "learning_rate": 0.00015,
+          "valid": {
+            "accuracy": 0.5739644970414202,
+            "balanced_accuracy": 0.21000000000000002,
+            "macro_f1": 0.1645021645021645,
+            "per_class": {
+              "dragon": {
+                "precision": 1.0,
+                "recall": 0.05,
+                "f1": 0.09523809523809523,
+                "support": 20
+              },
+              "ram": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 15
+              },
+              "snake": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 18
+              },
+              "tiger": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 20
+              },
+              "no_seal": {
+                "precision": 0.5714285714285714,
+                "recall": 1.0,
+                "f1": 0.7272727272727273,
+                "support": 96
+              }
+            },
+            "confusion_matrix": [
+              [
+                1,
+                0,
+                0,
+                0,
+                19
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                15
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                18
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                20
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                96
+              ]
+            ],
+            "no_seal_recall": 1.0,
+            "no_seal_missed_rate": 0.0,
+            "loss": 2.179640111280605
+          }
+        },
+        {
+          "epoch": 7,
+          "train_loss": 0.000658203581999125,
+          "learning_rate": 7.5e-05,
+          "valid": {
+            "accuracy": 0.5680473372781065,
+            "balanced_accuracy": 0.2,
+            "macro_f1": 0.14490566037735847,
+            "per_class": {
+              "dragon": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 20
+              },
+              "ram": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 15
+              },
+              "snake": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 18
+              },
+              "tiger": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 20
+              },
+              "no_seal": {
+                "precision": 0.5680473372781065,
+                "recall": 1.0,
+                "f1": 0.7245283018867924,
+                "support": 96
+              }
+            },
+            "confusion_matrix": [
+              [
+                0,
+                0,
+                0,
+                0,
+                20
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                15
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                18
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                20
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                96
+              ]
+            ],
+            "no_seal_recall": 1.0,
+            "no_seal_missed_rate": 0.0,
+            "loss": 2.3607712951294766
+          }
+        },
+        {
+          "epoch": 8,
+          "train_loss": 0.00043125797108384885,
+          "learning_rate": 7.5e-05,
+          "valid": {
+            "accuracy": 0.5680473372781065,
+            "balanced_accuracy": 0.2,
+            "macro_f1": 0.14490566037735847,
+            "per_class": {
+              "dragon": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 20
+              },
+              "ram": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 15
+              },
+              "snake": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 18
+              },
+              "tiger": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 20
+              },
+              "no_seal": {
+                "precision": 0.5680473372781065,
+                "recall": 1.0,
+                "f1": 0.7245283018867924,
+                "support": 96
+              }
+            },
+            "confusion_matrix": [
+              [
+                0,
+                0,
+                0,
+                0,
+                20
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                15
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                18
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                20
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                96
+              ]
+            ],
+            "no_seal_recall": 1.0,
+            "no_seal_missed_rate": 0.0,
+            "loss": 2.495592216408113
+          }
+        }
+      ]
+    },
+    "external_mobilenetv3_low_lr_v1": {
+      "epochs_completed": 10,
+      "selected_epoch": 3,
+      "best_validation_macro_f1": 0.34851453855878634,
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 1.3948710671177618,
+          "learning_rate": 3e-05,
+          "valid": {
+            "accuracy": 0.35502958579881655,
+            "balanced_accuracy": 0.22999999999999998,
+            "macro_f1": 0.2168596454390017,
+            "per_class": {
+              "dragon": {
+                "precision": 0.25,
+                "recall": 0.25,
+                "f1": 0.25,
+                "support": 20
+              },
+              "ram": {
+                "precision": 0.045454545454545456,
+                "recall": 0.06666666666666667,
+                "f1": 0.05405405405405406,
+                "support": 15
+              },
+              "snake": {
+                "precision": 0.12,
+                "recall": 0.3333333333333333,
+                "f1": 0.17647058823529413,
+                "support": 18
+              },
+              "tiger": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 20
+              },
+              "no_seal": {
+                "precision": 0.7619047619047619,
+                "recall": 0.5,
+                "f1": 0.6037735849056604,
+                "support": 96
+              }
+            },
+            "confusion_matrix": [
+              [
+                5,
+                1,
+                8,
+                2,
+                4
+              ],
+              [
+                3,
+                1,
+                5,
+                3,
+                3
+              ],
+              [
+                4,
+                4,
+                6,
+                0,
+                4
+              ],
+              [
+                0,
+                9,
+                7,
+                0,
+                4
+              ],
+              [
+                8,
+                7,
+                24,
+                9,
+                48
+              ]
+            ],
+            "no_seal_recall": 0.5,
+            "no_seal_missed_rate": 0.5,
+            "loss": 1.4961526989936829
+          }
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.9726195335388184,
+          "learning_rate": 3e-05,
+          "valid": {
+            "accuracy": 0.5443786982248521,
+            "balanced_accuracy": 0.2741666666666666,
+            "macro_f1": 0.26079248009973577,
+            "per_class": {
+              "dragon": {
+                "precision": 0.3888888888888889,
+                "recall": 0.35,
+                "f1": 0.3684210526315789,
+                "support": 20
+              },
+              "ram": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 15
+              },
+              "snake": {
+                "precision": 0.10344827586206896,
+                "recall": 0.16666666666666666,
+                "f1": 0.1276595744680851,
+                "support": 18
+              },
+              "tiger": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 20
+              },
+              "no_seal": {
+                "precision": 0.7663551401869159,
+                "recall": 0.8541666666666666,
+                "f1": 0.8078817733990148,
+                "support": 96
+              }
+            },
+            "confusion_matrix": [
+              [
+                7,
+                1,
+                6,
+                2,
+                4
+              ],
+              [
+                3,
+                0,
+                3,
+                0,
+                9
+              ],
+              [
+                5,
+                2,
+                3,
+                0,
+                8
+              ],
+              [
+                0,
+                6,
+                10,
+                0,
+                4
+              ],
+              [
+                3,
+                1,
+                7,
+                3,
+                82
+              ]
+            ],
+            "no_seal_recall": 0.8541666666666666,
+            "no_seal_missed_rate": 0.14583333333333334,
+            "loss": 1.3325111269950867
+          }
+        },
+        {
+          "epoch": 3,
+          "train_loss": 0.6163482125158664,
+          "learning_rate": 3e-05,
+          "valid": {
+            "accuracy": 0.6449704142011834,
+            "balanced_accuracy": 0.35138888888888886,
+            "macro_f1": 0.34851453855878634,
+            "per_class": {
+              "dragon": {
+                "precision": 0.8333333333333334,
+                "recall": 0.5,
+                "f1": 0.625,
+                "support": 20
+              },
+              "ram": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 15
+              },
+              "snake": {
+                "precision": 0.29411764705882354,
+                "recall": 0.2777777777777778,
+                "f1": 0.2857142857142857,
+                "support": 18
+              },
+              "tiger": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 20
+              },
+              "no_seal": {
+                "precision": 0.7230769230769231,
+                "recall": 0.9791666666666666,
+                "f1": 0.831858407079646,
+                "support": 96
+              }
+            },
+            "confusion_matrix": [
+              [
+                10,
+                0,
+                4,
+                2,
+                4
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                15
+              ],
+              [
+                2,
+                0,
+                5,
+                0,
+                11
+              ],
+              [
+                0,
+                6,
+                8,
+                0,
+                6
+              ],
+              [
+                0,
+                1,
+                0,
+                1,
+                94
+              ]
+            ],
+            "no_seal_recall": 0.9791666666666666,
+            "no_seal_missed_rate": 0.020833333333333332,
+            "loss": 1.1823638478914897
+          }
+        },
+        {
+          "epoch": 4,
+          "train_loss": 0.3654415210088094,
+          "learning_rate": 3e-05,
+          "valid": {
+            "accuracy": 0.6153846153846154,
+            "balanced_accuracy": 0.2833333333333333,
+            "macro_f1": 0.2743001261034048,
+            "per_class": {
+              "dragon": {
+                "precision": 0.8333333333333334,
+                "recall": 0.25,
+                "f1": 0.38461538461538464,
+                "support": 20
+              },
+              "ram": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 15
+              },
+              "snake": {
+                "precision": 0.25,
+                "recall": 0.16666666666666666,
+                "f1": 0.2,
+                "support": 18
+              },
+              "tiger": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 20
+              },
+              "no_seal": {
+                "precision": 0.6486486486486487,
+                "recall": 1.0,
+                "f1": 0.7868852459016393,
+                "support": 96
+              }
+            },
+            "confusion_matrix": [
+              [
+                5,
+                0,
+                3,
+                2,
+                10
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                15
+              ],
+              [
+                1,
+                0,
+                3,
+                0,
+                14
+              ],
+              [
+                0,
+                1,
+                6,
+                0,
+                13
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                96
+              ]
+            ],
+            "no_seal_recall": 1.0,
+            "no_seal_missed_rate": 0.0,
+            "loss": 1.0530944168567657
+          }
+        },
+        {
+          "epoch": 5,
+          "train_loss": 0.23247705979479683,
+          "learning_rate": 3e-05,
+          "valid": {
+            "accuracy": 0.5857988165680473,
+            "balanced_accuracy": 0.22999999999999998,
+            "macro_f1": 0.1976923076923077,
+            "per_class": {
+              "dragon": {
+                "precision": 0.75,
+                "recall": 0.15,
+                "f1": 0.25,
+                "support": 20
+              },
+              "ram": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 15
+              },
+              "snake": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 18
+              },
+              "tiger": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 20
+              },
+              "no_seal": {
+                "precision": 0.5853658536585366,
+                "recall": 1.0,
+                "f1": 0.7384615384615385,
+                "support": 96
+              }
+            },
+            "confusion_matrix": [
+              [
+                3,
+                0,
+                1,
+                0,
+                16
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                15
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                18
+              ],
+              [
+                1,
+                0,
+                0,
+                0,
+                19
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                96
+              ]
+            ],
+            "no_seal_recall": 1.0,
+            "no_seal_missed_rate": 0.0,
+            "loss": 0.9871265391508738
+          }
+        },
+        {
+          "epoch": 6,
+          "train_loss": 0.15431033626750665,
+          "learning_rate": 1.5e-05,
+          "valid": {
+            "accuracy": 0.5680473372781065,
+            "balanced_accuracy": 0.2,
+            "macro_f1": 0.14490566037735847,
+            "per_class": {
+              "dragon": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 20
+              },
+              "ram": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 15
+              },
+              "snake": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 18
+              },
+              "tiger": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 20
+              },
+              "no_seal": {
+                "precision": 0.5680473372781065,
+                "recall": 1.0,
+                "f1": 0.7245283018867924,
+                "support": 96
+              }
+            },
+            "confusion_matrix": [
+              [
+                0,
+                0,
+                0,
+                0,
+                20
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                15
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                18
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                20
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                96
+              ]
+            ],
+            "no_seal_recall": 1.0,
+            "no_seal_missed_rate": 0.0,
+            "loss": 0.9971688489119211
+          }
+        },
+        {
+          "epoch": 7,
+          "train_loss": 0.10530108241019426,
+          "learning_rate": 1.5e-05,
+          "valid": {
+            "accuracy": 0.5680473372781065,
+            "balanced_accuracy": 0.2,
+            "macro_f1": 0.14490566037735847,
+            "per_class": {
+              "dragon": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 20
+              },
+              "ram": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 15
+              },
+              "snake": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 18
+              },
+              "tiger": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 20
+              },
+              "no_seal": {
+                "precision": 0.5680473372781065,
+                "recall": 1.0,
+                "f1": 0.7245283018867924,
+                "support": 96
+              }
+            },
+            "confusion_matrix": [
+              [
+                0,
+                0,
+                0,
+                0,
+                20
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                15
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                18
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                20
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                96
+              ]
+            ],
+            "no_seal_recall": 1.0,
+            "no_seal_missed_rate": 0.0,
+            "loss": 1.0404982455074787
+          }
+        },
+        {
+          "epoch": 8,
+          "train_loss": 0.08137177744949306,
+          "learning_rate": 1.5e-05,
+          "valid": {
+            "accuracy": 0.5680473372781065,
+            "balanced_accuracy": 0.2,
+            "macro_f1": 0.14490566037735847,
+            "per_class": {
+              "dragon": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 20
+              },
+              "ram": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 15
+              },
+              "snake": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 18
+              },
+              "tiger": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 20
+              },
+              "no_seal": {
+                "precision": 0.5680473372781065,
+                "recall": 1.0,
+                "f1": 0.7245283018867924,
+                "support": 96
+              }
+            },
+            "confusion_matrix": [
+              [
+                0,
+                0,
+                0,
+                0,
+                20
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                15
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                18
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                20
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                96
+              ]
+            ],
+            "no_seal_recall": 1.0,
+            "no_seal_missed_rate": 0.0,
+            "loss": 1.0986176654696465
+          }
+        },
+        {
+          "epoch": 9,
+          "train_loss": 0.0749928720847324,
+          "learning_rate": 7.5e-06,
+          "valid": {
+            "accuracy": 0.5680473372781065,
+            "balanced_accuracy": 0.2,
+            "macro_f1": 0.14490566037735847,
+            "per_class": {
+              "dragon": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 20
+              },
+              "ram": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 15
+              },
+              "snake": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 18
+              },
+              "tiger": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 20
+              },
+              "no_seal": {
+                "precision": 0.5680473372781065,
+                "recall": 1.0,
+                "f1": 0.7245283018867924,
+                "support": 96
+              }
+            },
+            "confusion_matrix": [
+              [
+                0,
+                0,
+                0,
+                0,
+                20
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                15
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                18
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                20
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                96
+              ]
+            ],
+            "no_seal_recall": 1.0,
+            "no_seal_missed_rate": 0.0,
+            "loss": 1.1671069140235584
+          }
+        },
+        {
+          "epoch": 10,
+          "train_loss": 0.061694625627111505,
+          "learning_rate": 7.5e-06,
+          "valid": {
+            "accuracy": 0.5680473372781065,
+            "balanced_accuracy": 0.2,
+            "macro_f1": 0.14490566037735847,
+            "per_class": {
+              "dragon": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 20
+              },
+              "ram": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 15
+              },
+              "snake": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 18
+              },
+              "tiger": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "support": 20
+              },
+              "no_seal": {
+                "precision": 0.5680473372781065,
+                "recall": 1.0,
+                "f1": 0.7245283018867924,
+                "support": 96
+              }
+            },
+            "confusion_matrix": [
+              [
+                0,
+                0,
+                0,
+                0,
+                20
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                15
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                18
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                20
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                96
+              ]
+            ],
+            "no_seal_recall": 1.0,
+            "no_seal_missed_rate": 0.0,
+            "loss": 1.2235265709459782
+          }
+        }
+      ]
+    }
+  },
+  "test_metrics": {
+    "accuracy": 0.6219512195121951,
+    "balanced_accuracy": 0.30492548575740425,
+    "macro_f1": 0.31508971254733964,
+    "per_class": {
+      "dragon": {
+        "precision": 1.0,
+        "recall": 0.2631578947368421,
+        "f1": 0.4166666666666667,
+        "support": 19
+      },
+      "ram": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 14
+      },
+      "snake": {
+        "precision": 0.5,
+        "recall": 0.2222222222222222,
+        "f1": 0.3076923076923077,
+        "support": 18
+      },
+      "tiger": {
+        "precision": 0.125,
+        "recall": 0.05,
+        "f1": 0.07142857142857142,
+        "support": 20
+      },
+      "no_seal": {
+        "precision": 0.6433566433566433,
+        "recall": 0.989247311827957,
+        "f1": 0.7796610169491526,
+        "support": 93
+      }
+    },
+    "confusion_matrix": [
+      [
+        5,
+        0,
+        0,
+        1,
+        13
+      ],
+      [
+        0,
+        0,
+        3,
+        3,
+        8
+      ],
+      [
+        0,
+        0,
+        4,
+        3,
+        11
+      ],
+      [
+        0,
+        0,
+        0,
+        1,
+        19
+      ],
+      [
+        0,
+        0,
+        1,
+        0,
+        92
+      ]
+    ],
+    "no_seal_recall": 0.989247311827957,
+    "no_seal_missed_rate": 0.010752688172043012,
+    "checkpoint": "artifacts/external_mobilenetv3_v1/best.pt",
+    "split": "test",
+    "device": "cuda"
+  },
+  "export_verification": {
+    "app_loader_passed": true,
+    "checkpoint_export_logits_match": true,
+    "output_shape": [
+      1,
+      5
+    ],
+    "max_logit_difference": 0.0,
+    "model_bytes": 6524367,
+    "note": "Runtime integration check only; model accuracy is separately reported."
+  }
+}

@@ -50,4 +50,3 @@ assert seen == set(annotations), 'Missing annotated images'
 summary = {'total_images': len(records), 'counts': dict(counts), 'subjects': len(subject_splits), 'subject_overlap': 0, 'unreadable_images': 0, 'mapping': {'no_gesture': 'no_seal'}, 'note': 'Candidate negative samples; natural hand postures, not comprehensive no-hand or transition coverage. Missing source session/environment metadata remain null. Raw images are unchanged.'}
 (root / 'verification.json').write_text(json.dumps(summary, indent=2), encoding='utf-8')
 print(json.dumps(summary, indent=2))
-

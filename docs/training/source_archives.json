@@ -1,0 +1,20 @@
+[
+  {
+    "path": "local_setup\\datasets\\hagrid\\no_gesture.zip",
+    "bytes": 517860551,
+    "sha256": "35b7a89f3dfb602ee7738ca7bc6ef6146a46d14d57a6b1ae4b1c2ee99e171c60",
+    "first_crc_error": null
+  },
+  {
+    "path": "local_setup\\datasets\\hagrid\\annotations.zip",
+    "bytes": 719041314,
+    "sha256": "ca27a177cc9f061e92d59f6a7d9b1b10fe2ee8289ab5f2068cde6ab197d2a286",
+    "first_crc_error": null
+  },
+  {
+    "path": "local_setup\\datasets\\naruto_kaggle\\naruto-hand-sign-dataset.zip",
+    "bytes": 2167606185,
+    "sha256": "705f13bc0a14c93197aac1156623c2546551cb3d362ee187a25ae7b9e66acb62",
+    "first_crc_error": null
+  }
+]
