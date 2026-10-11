@@ -158,7 +158,7 @@ def audit_dataset(root: Path, class_names: list[str]) -> dict:
                     "path": relative_path,
                     "split": split,
                     "class_name": name,
-                    "source_key": source_key(path),
+                    "source_key": metadata_row.get("source_key") or source_key(path),
                     "sha256": sha256(path),
                 }
                 for field in METADATA_FIELDS:
@@ -201,6 +201,11 @@ def audit_dataset(root: Path, class_names: list[str]) -> dict:
         if missing:
             missing_metadata_paths.append({"path": record["path"], "fields": missing})
         if metadata_row:
+            for field in ("width", "height", "sha256"):
+                if field in record and field in metadata_row and metadata_row[field] != record[field]:
+                    metadata_mismatches.append(
+                        {"path": record["path"], "field": field, "value": metadata_row[field]}
+                    )
             if metadata_row.get("label", metadata_row.get("class_name")) != record["class_name"]:
                 metadata_mismatches.append(
                     {"path": record["path"], "field": "label", "value": metadata_row.get("label")}

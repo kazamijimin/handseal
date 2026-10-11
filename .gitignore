@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.py[cod]
+local_setup/
+handseal_dataset_external_*/
+handseal_collected/
+runtime_validation/
+artifacts/*/
+reports/external_baseline*/
