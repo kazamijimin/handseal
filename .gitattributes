@@ -1,0 +1,4 @@
+handseal_collected/**/*.jpg filter=lfs diff=lfs merge=lfs -text
+handseal_collected/**/*.jpeg filter=lfs diff=lfs merge=lfs -text
+handseal_collected/**/*.png filter=lfs diff=lfs merge=lfs -text
+handseal_collected/**/*.webp filter=lfs diff=lfs merge=lfs -text

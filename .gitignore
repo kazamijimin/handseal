@@ -3,7 +3,7 @@ __pycache__/
 *.py[cod]
 local_setup/
 handseal_dataset_external_*/
-handseal_collected/
+handseal_collected/*.bak
 runtime_validation/
 artifacts/*/
 !artifacts/exports/
