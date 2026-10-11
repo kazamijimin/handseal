@@ -10,4 +10,6 @@ artifacts/*/
 artifacts/exports/*
 !artifacts/exports/external_mobilenetv3_v1.torchscript.pt
 !artifacts/exports/external_mobilenetv3_v1.metadata.json
+!artifacts/exports/collected_mobilenetv3_v1.torchscript.pt
+!artifacts/exports/collected_mobilenetv3_v1.metadata.json
 reports/external_baseline*/

@@ -1,0 +1,69 @@
+{
+  "source_commit": "0b237e54071448e0420efc0b3e0260abbf409c61",
+  "source_images": 4063,
+  "source_counts": {
+    "train": {
+      "dragon": 264,
+      "ram": 192,
+      "snake": 201,
+      "tiger": 201,
+      "no_seal": 201
+    },
+    "valid": {
+      "dragon": 95,
+      "ram": 95,
+      "snake": 95,
+      "tiger": 114,
+      "no_seal": 95
+    },
+    "test": {
+      "dragon": 502,
+      "ram": 503,
+      "snake": 502,
+      "tiger": 501,
+      "no_seal": 502
+    }
+  },
+  "metadata_rows": 4098,
+  "source_metadata_entries_without_images": 35,
+  "source_audit_issue": "2 cross-split average-hash similarity groups",
+  "source_cross_split_near_group_sizes": [
+    2188,
+    497
+  ],
+  "capture_identity_confirmed": false,
+  "preparation": {
+    "added": 1023,
+    "excluded_exact_duplicates": 1,
+    "excluded_held_out_similarity": 35,
+    "counts": {
+      "train": {
+        "dragon": 479,
+        "ram": 354,
+        "snake": 416,
+        "tiger": 430,
+        "no_seal": 596
+      },
+      "valid": {
+        "dragon": 20,
+        "ram": 15,
+        "snake": 18,
+        "tiger": 20,
+        "no_seal": 96
+      },
+      "test": {
+        "dragon": 19,
+        "ram": 14,
+        "snake": 18,
+        "tiger": 20,
+        "no_seal": 93
+      }
+    },
+    "baseline_issues": [],
+    "policy": "collected train only; original public valid/test unchanged"
+  },
+  "public_validation_files": 169,
+  "public_test_files": 164,
+  "public_holdouts_byte_identical": true,
+  "dataset_fingerprint": "66a21d0390c2c6f9da7f0a129a7910c897f8c16c69794820842778df5dc1ffea"
+}

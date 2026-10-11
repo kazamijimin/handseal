@@ -1,0 +1,27 @@
+{
+  "model_path": "collected_mobilenetv3_v1.torchscript.pt",
+  "model_name": "mobilenetv3_small",
+  "class_names": [
+    "dragon",
+    "ram",
+    "snake",
+    "tiger",
+    "no_seal"
+  ],
+  "image_size": 224,
+  "normalization": {
+    "mean": [
+      0.485,
+      0.456,
+      0.406
+    ],
+    "std": [
+      0.229,
+      0.224,
+      0.225
+    ]
+  },
+  "source_run": "collected_mobilenetv3_v1",
+  "training_date": "2026-10-11",
+  "dataset_fingerprint": "66a21d0390c2c6f9da7f0a129a7910c897f8c16c69794820842778df5dc1ffea"
+}
